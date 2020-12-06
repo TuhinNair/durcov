@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS covid_stats (
     confirmed INT,
     deaths INT,
     recovered INT,
-    collected_at TIMESTAMP WITH TIME ZONE
+    collected_at TIMESTAMP
 )

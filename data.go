@@ -23,9 +23,9 @@ type global struct {
 }
 
 type statistics struct {
-	totalConfirmed int
-	totalDeaths    int
-	totalRecovered int
+	totalConfirmed int64
+	totalDeaths    int64
+	totalRecovered int64
 	date           time.Time
 }
 
@@ -33,9 +33,9 @@ type expectedJSONCountryShape struct {
 	Name           string    `json:"Country"`
 	Slug           string    `json:"Slug"`
 	Code           string    `json:"CountryCode"`
-	TotalConfirmed int       `json:"TotalConfirmed"`
-	TotalDeaths    int       `json:"TotalDeaths"`
-	TotalRecovered int       `json:"TotalRecovered"`
+	TotalConfirmed int64     `json:"TotalConfirmed"`
+	TotalDeaths    int64     `json:"TotalDeaths"`
+	TotalRecovered int64     `json:"TotalRecovered"`
 	Date           time.Time `json:"Date"`
 }
 
@@ -53,9 +53,9 @@ func (d *Data) UnmarshalJSON(data []byte) error {
 	}
 
 	globalStats := &statistics{
-		totalConfirmed: int(ingress.Global["TotalConfirmed"].(float64)),
-		totalDeaths:    int(ingress.Global["TotalDeaths"].(float64)),
-		totalRecovered: int(ingress.Global["TotalRecovered"].(float64)),
+		totalConfirmed: int64(ingress.Global["TotalConfirmed"].(float64)),
+		totalDeaths:    int64(ingress.Global["TotalDeaths"].(float64)),
+		totalRecovered: int64(ingress.Global["TotalRecovered"].(float64)),
 		date:           ingress.Date,
 	}
 
