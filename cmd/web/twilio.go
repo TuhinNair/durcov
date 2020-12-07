@@ -17,7 +17,7 @@ type TwilioBot struct {
 type twilioRequest struct {
 	to          string
 	from        string
-	messageBody string
+	requestBody string
 }
 
 type twilioResponse struct {
@@ -57,7 +57,7 @@ func (tb *TwilioBot) handleWhatsapp(w http.ResponseWriter, r *http.Request) {
 }
 
 func (tb *TwilioBot) respond(reqData *twilioRequest) error {
-	reqMsg := reqData.messageBody
+	reqMsg := reqData.requestBody
 	resMsg := tb.bot.respond(reqMsg)
 
 	twilioResp := reqData.toResponse(resMsg)
