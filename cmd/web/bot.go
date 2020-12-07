@@ -63,12 +63,17 @@ func (b *Bot) respond(requestMessage string) string {
 		return b.handleBotError(botErr)
 	}
 
-	_, botErr = b.matchRequest(trimmedMsg)
+	parsedReq, botErr := b.matchRequest(trimmedMsg)
 	if botErr != nil {
 		return b.handleBotError(botErr)
 	}
 
-	return ""
+	response, botErr := b.generateResponse(parsedReq)
+	if botErr != nil {
+		return b.handleBotError(botErr)
+	}
+
+	return response
 
 }
 
@@ -141,4 +146,95 @@ func (b *Bot) extractSubExp(matches []string) (command string, code string) {
 	code = matches[codeIdx]
 	code = strings.ToUpper(code)
 	return command, code
+}
+
+func (b *Bot) generateResponse(parsedReq *parsedRequest) (string, *botError) {
+	switch parsedReq.Type {
+	case _Cases:
+		log.Println("About to generate cases response")
+		return b.generateCasesResponse(parsedReq.Code)
+	case _Deaths:
+		log.Println("About to generate deaths response")
+		return b.generateDeathsResponse(parsedReq.Code)
+	}
+
+	requestTypeLog := fmt.Sprintf("Parsed Request Type: %v", parsedReq.Type)
+	requestCodeLog := fmt.Sprintf("Parsed Request Code: %s", parsedReq.Code)
+	failedMessageCtxt := []interface{}{
+		requestTypeLog,
+		requestCodeLog,
+	}
+	botErr := &botError{
+		errors.New("Unexpected Request Type"),
+		"Oops, I've got myself confused :(",
+		failedMessageCtxt,
+	}
+	return "", botErr
+}
+
+func (b *Bot) generateCasesResponse(code string) (string, *botError) {
+	if code == "TOTAL" {
+		log.Println("About to generaye global active message")
+		return b.generateGlobalActiveMessage()
+	}
+	log.Println("About to generate country active message")
+	return b.generateCountryActiveMessage(code)
+}
+
+func (b *Bot) generateGlobalActiveMessage() (string, *botError) {
+	activeCount, err := b.view.LatestGlobalView(durcov.Active)
+	if err != nil {
+		logMessage := "Error: Global Active"
+		failedMessageCtxt := []interface{}{logMessage}
+		botErr := &botError{err, "Sorry, I don't have the results right now.", failedMessageCtxt}
+		return "", botErr
+	}
+	message := fmt.Sprintf("Total Active Cases: %d", activeCount)
+	return message, nil
+}
+
+func (b *Bot) generateCountryActiveMessage(code string) (string, *botError) {
+	activeCount, err := b.view.LatestCountryView(code, durcov.Active)
+	if err != nil {
+		logMessage := fmt.Sprintf("Error: Country Active. Code=%s", code)
+		failedMessageCtxt := []interface{}{logMessage}
+		botErr := &botError{err, "Sorry, I don't have the results right now.", failedMessageCtxt}
+		return "", botErr
+	}
+
+	message := fmt.Sprintf("%s Active Cases: %d", code, activeCount)
+	return message, nil
+}
+
+func (b *Bot) generateDeathsResponse(code string) (string, *botError) {
+	if code == "TOTAL" {
+		log.Println("About to generate globaldeathsmessage")
+		return b.generateGlobalDeathsMessage()
+	}
+	log.Println("about to generate country deaths message")
+	return b.generateCountryDeathsMessage(code)
+}
+
+func (b *Bot) generateGlobalDeathsMessage() (string, *botError) {
+	deathCount, err := b.view.LatestGlobalView(durcov.Deaths)
+	if err != nil {
+		logMessage := "Error: Global Deaths"
+		failedMessageCtxt := []interface{}{logMessage}
+		botErr := &botError{err, "Sorry, I don't have the results right now.", failedMessageCtxt}
+		return "", botErr
+	}
+	message := fmt.Sprintf("Total Deaths: %d", deathCount)
+	return message, nil
+}
+
+func (b *Bot) generateCountryDeathsMessage(code string) (string, *botError) {
+	deathCount, err := b.view.LatestCountryView(code, durcov.Deaths)
+	if err != nil {
+		logMessage := fmt.Sprintf("Error: Country Deaths. Code=%s", code)
+		failedMessageCtxt := []interface{}{logMessage}
+		botErr := &botError{err, "Sorry, I don't have the results right now.", failedMessageCtxt}
+		return "", botErr
+	}
+	message := fmt.Sprintf("%s Deaths: %v", code, deathCount)
+	return message, nil
 }
