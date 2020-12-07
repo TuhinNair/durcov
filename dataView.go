@@ -8,7 +8,7 @@ import (
 	"gopkg.in/errgo.v2/fmt/errors"
 )
 
-// Represents a datapoint
+// Datum represents a datapoint
 type Datum int
 
 // Represt covid datapoints
