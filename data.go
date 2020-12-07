@@ -29,6 +29,12 @@ type statistics struct {
 	date           time.Time
 }
 
+type expectedJSONShape struct {
+	Global    expectedJSONGlobalShape     `json:"Global"`
+	Countries []*expectedJSONCountryShape `json:"Countries"`
+	Date      time.Time                   `json:"Date"`
+}
+
 type expectedJSONCountryShape struct {
 	Name           string    `json:"Country"`
 	Slug           string    `json:"Slug"`
@@ -39,10 +45,10 @@ type expectedJSONCountryShape struct {
 	Date           time.Time `json:"Date"`
 }
 
-type expectedJSONShape struct {
-	Global    map[string]interface{}      `json:"Global"`
-	Countries []*expectedJSONCountryShape `json:"Countries"`
-	Date      time.Time                   `json:"Date"`
+type expectedJSONGlobalShape struct {
+	TotalConfirmed int64
+	TotalDeaths    int64
+	TotalRecovered int64
 }
 
 // UnmarshalJSON complies with the json package for custom decoding
@@ -53,9 +59,10 @@ func (d *Data) UnmarshalJSON(data []byte) error {
 	}
 
 	globalStats := &statistics{
-		totalConfirmed: int64(ingress.Global["TotalConfirmed"].(float64)),
-		totalDeaths:    int64(ingress.Global["TotalDeaths"].(float64)),
-		totalRecovered: int64(ingress.Global["TotalRecovered"].(float64)),
+		// When decoding the interface{} type go will cast all numeric types to float64 by default
+		totalConfirmed: ingress.Global.TotalConfirmed,
+		totalDeaths:    ingress.Global.TotalDeaths,
+		totalRecovered: ingress.Global.TotalRecovered,
 		date:           ingress.Date,
 	}
 
