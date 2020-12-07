@@ -1,3 +1,6 @@
+// +heroku install ./cmd/... .
+// +heroku goVersion go1.15
+
 module github.com/TuhinNair/durcov
 
 go 1.15
