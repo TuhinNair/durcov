@@ -71,6 +71,21 @@ func TestBotMatchRequest(t *testing.T) {
 			nil,
 			true,
 		},
+		{
+			"Case IN",
+			nil,
+			true,
+		},
+		{
+			"DEATHS TOT",
+			nil,
+			true,
+		},
+		{
+			"Cases I",
+			nil,
+			true,
+		},
 	}
 
 	testBot := Bot{nil}
