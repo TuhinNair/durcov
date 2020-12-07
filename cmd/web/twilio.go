@@ -8,9 +8,10 @@ import (
 	"github.com/kevinburke/twilio-go"
 )
 
-type twilioBot struct {
+// TwilioBot represents a twilio client backed by a bot
+type TwilioBot struct {
 	client *twilio.Client
-	bot    *bot
+	bot    *Bot
 }
 
 type twilioRequest struct {
@@ -29,25 +30,42 @@ func (tr *twilioRequest) toResponse(responseBody string) *twilioResponse {
 	return &twilioResponse{to: tr.from, from: tr.to, responseBody: responseBody}
 }
 
-func (tb *twilioBot) handleWhatsapp(w http.ResponseWriter, r *http.Request) {
-	// if r.Method != "POST" {
-	// 	w.Header().Set("Allow", "POST")
-	// 	http.Error(w, http.StatusText(405), 405)
-	// 	return
-	// }
-	// twilioRequestData, err := parseRequest(r)
-	// if err != nil {
-	// 	http.Error(w, http.StatusText(400), 400)
-	// 	return
-	// }
-
-	// requestMessage := twilioRequestData.messageBody
-	// response, err := tb.bot.respond(requestMessage)
-	// return
-
+func (tr *twilioResponse) respond(twilioClient *twilio.Client) error {
+	_, err := twilioClient.Messages.SendMessage(tr.from, tr.to, tr.responseBody, nil)
+	return err
 }
 
-func parseRequest(r *http.Request) (*twilioRequest, error) {
+func (tb *TwilioBot) handleWhatsapp(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		w.Header().Set("Allow", "POST")
+		http.Error(w, http.StatusText(405), 405)
+		return
+	}
+	twilioRequestData, err := tb.parseRequest(r)
+	if err != nil {
+		http.Error(w, http.StatusText(400), 400)
+		return
+	}
+
+	err = tb.respond(twilioRequestData)
+	if err != nil {
+		http.Error(w, http.StatusText(500), 500)
+	} else {
+		w.WriteHeader(200)
+	}
+	return
+}
+
+func (tb *TwilioBot) respond(reqData *twilioRequest) error {
+	reqMsg := reqData.messageBody
+	resMsg := tb.bot.respond(reqMsg)
+
+	twilioResp := reqData.toResponse(resMsg)
+	err := twilioResp.respond(tb.client)
+	return err
+}
+
+func (tb *TwilioBot) parseRequest(r *http.Request) (*twilioRequest, error) {
 	err := r.ParseForm()
 	if err != nil {
 		log.Println(err)

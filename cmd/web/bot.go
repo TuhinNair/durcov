@@ -4,10 +4,11 @@ import (
 	"github.com/TuhinNair/durcov"
 )
 
-type bot struct {
+// Bot represents a message consuming and message producing conversational bot
+type Bot struct {
 	view *durcov.CovidBotView
 }
 
-func (b *bot) respond(requestMessage string) (string, error) {
-	return "", nil
+func (b *Bot) respond(requestMessage string) string {
+	return ""
 }
