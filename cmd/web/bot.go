@@ -13,7 +13,7 @@ import (
 )
 
 // Regex patterns to match valid commands.
-var commandPattern = `(?P<command>^(?i)(CASES|DEATHS))`                                // Case insensitive match on either 'CASES' or 'DEATHS'
+var commandPattern = `(?P<command>^(?i)(CASES|DEATHS))`                                // Case insensitive match on either 'CASES' or 'DEATHS'. Must be at the start of string
 var countryCodePattern = `(?P<countryCode>(?i)((TOTAL)|[A-Z]{2})$)`                    // Case insensitive match on either 'TOTAL' or a two letter sequence from [A-Z]. Must be at the end of string.
 var validBodyPattern = regexp.MustCompile(commandPattern + `\s+` + countryCodePattern) // Matches command and code delimited by 1+n whitespace
 

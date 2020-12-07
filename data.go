@@ -59,7 +59,6 @@ func (d *Data) UnmarshalJSON(data []byte) error {
 	}
 
 	globalStats := &statistics{
-		// When decoding the interface{} type go will cast all numeric types to float64 by default
 		totalConfirmed: ingress.Global.TotalConfirmed,
 		totalDeaths:    ingress.Global.TotalDeaths,
 		totalRecovered: ingress.Global.TotalRecovered,

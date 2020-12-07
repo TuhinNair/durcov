@@ -10,7 +10,7 @@ import (
 // Datum represents a datapoint
 type Datum int
 
-// Represt covid datapoints
+// Representst covid related datapoints
 const (
 	Confirmed Datum = iota + 1
 	Deaths
