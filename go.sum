@@ -1,3 +1,5 @@
+github.com/TuhinNair/ducov v0.0.0-20201205104711-6e28f9675492 h1:Vf5f0YBnCM2yciWR1/sArxMfITKyDjvwNNU1QSnDMTw=
+github.com/TuhinNair/ducov v0.0.0-20201205104711-6e28f9675492/go.mod h1:iF9gjflSl4/EzP6bWbZsFb0Vo4KLcxz+vgwD3q+C988=
 github.com/jackc/pgx v3.6.2+incompatible h1:2zP5OD7kiyR3xzRYMhOcXVvkDZsImVXfj+yIyTQf3/o=
 github.com/jackc/pgx v3.6.2+incompatible/go.mod h1:0ZGrqGqkRlliWnWB4zKnWtjbSWbGkVEFm4TeybAXq+I=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
