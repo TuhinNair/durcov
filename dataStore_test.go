@@ -17,7 +17,7 @@ func TestDataStore(t *testing.T) {
 	dataStore := CovidDataStore{}
 	dataStore.SetDBConnection(pool)
 
-	exampleData, err := exampleTestData()
+	exampleData, err := ExampleTestData()
 	if err != nil {
 		t.Error(err)
 	}

@@ -16,11 +16,14 @@ func TestDataView(t *testing.T) {
 	dataStore := CovidDataStore{}
 	dataStore.SetDBConnection(pool)
 
-	exampleData, err := exampleTestData()
+	exampleData, err := ExampleTestData()
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
-	dataStore.StoreData(exampleData)
+	err = dataStore.StoreData(exampleData)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	dataView := CovidBotView{}
 	dataView.SetDBConnection(pool)

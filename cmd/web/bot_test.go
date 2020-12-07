@@ -1,6 +1,11 @@
 package main
 
-import "testing"
+import (
+	"os"
+	"testing"
+
+	"github.com/TuhinNair/durcov"
+)
 
 func TestBotMatchRequest(t *testing.T) {
 	tests := []struct {
@@ -106,6 +111,61 @@ func TestBotMatchRequest(t *testing.T) {
 			if parsedReq.Type != test.expectedParsedRequest.Type {
 				t.Fatalf("Parsed Request Type error. Expected=%d Got=%d", test.expectedParsedRequest.Type, parsedReq.Type)
 			}
+		}
+	}
+}
+
+func TestBotResponseGeneration(t *testing.T) {
+	dbURL := os.Getenv("TEST_DATABASE_URL")
+	pool, err := durcov.GetPgxPool(dbURL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer pool.Close()
+
+	dataStore := &durcov.CovidDataStore{}
+	dataStore.SetDBConnection(pool)
+
+	exampleData, err := durcov.ExampleTestData()
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = dataStore.StoreData(exampleData)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	dataView := &durcov.CovidBotView{}
+	dataView.SetDBConnection(pool)
+
+	testBot := &Bot{dataView}
+
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{
+			"CASES TOTAL",
+			"Total Active Cases: 9000000",
+		},
+		{
+			"CASES AF",
+			"AF Active Cases: 8132",
+		},
+		{
+			"DEATHS TOTAL",
+			"Total Deaths: 500000",
+		},
+		{
+			"DEATHS SG",
+			"SG Deaths: 1822",
+		},
+	}
+
+	for _, test := range tests {
+		response := testBot.respond(test.input)
+		if response != test.expected {
+			t.Errorf("Response mismatch. Expected=%s Got=%s", test.expected, response)
 		}
 	}
 }

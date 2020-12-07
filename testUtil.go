@@ -2,7 +2,9 @@ package durcov
 
 import "time"
 
-func exampleTestData() (*Data, error) {
+// ExampleTestData returns a mock Data struct with global data and data for 2 countries.
+// Inteneded as a testing utility.
+func ExampleTestData() (*Data, error) {
 	exampleTime, err := time.Parse(time.RFC3339, "2020-12-04T03:49:29Z")
 	if err != nil {
 		return nil, err
