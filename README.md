@@ -52,6 +52,18 @@
 * I capped the length of incoming messages just because the compiled regex takes linear time to match input. (This is because I'm lenient with delimiting whitespace in the input)
 
 ## Considerations (or things I should've done)
+* The API used (and other similar API's) allow subscribing to updates (by registering a webhook) which means we'd only make network requests as necessary. But that's API provider specific and the doc mentioned polling, so I polled away.
 * Rate limiting. Twilio itself has some sort of rate limiting but I'd have some simple application level rate limiting as well.
 * Health checks, context tracking/tracing for audit logging, audit logging, tiered logging and all the other nice web stuff.
 * Maybe sessions? Although I don't know how much that matters for an app like this.
+
+## Demo 
+* All commands are case insensitive and there's some amount of lenience for how much space is used between the command and the code.
+### Global commands
+* ![](./demo/cases_deaths_total.gif)
+
+### Country specific commands. ( I added the country name for better feedback)
+* ![](./demo/country.gif)
+
+### Some error handling
+* ![](./demo/error.gif)
