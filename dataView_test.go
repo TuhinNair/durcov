@@ -76,6 +76,16 @@ func TestDataView(t *testing.T) {
 				}
 			}
 		},
+		"Unmathced country code returns specific error": func(t *testing.T) {
+			_, err := dataView.LatestCountryView("--", Active)
+			if err, ok := err.(*NoCountryMatchedError); !ok {
+				t.Errorf("Unexpected error. Expected=*NoCountryMatchedError Got=%T", err)
+			}
+			_, err = dataView.LatestCountryView("--", Deaths)
+			if err, ok := err.(*NoCountryMatchedError); !ok {
+				t.Errorf("Unexpected error. Expected=*NoCountryMatchedError Got=%T", err)
+			}
+		},
 	}
 
 	for name, test := range tests {
