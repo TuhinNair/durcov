@@ -63,7 +63,7 @@ func (b *Bot) respond(requestMessage string) string {
 		return b.handleBotError(botErr)
 	}
 
-	parsedReq, botErr := b.matchRequest(trimmedMsg)
+	_, botErr = b.matchRequest(trimmedMsg)
 	if botErr != nil {
 		return b.handleBotError(botErr)
 	}
