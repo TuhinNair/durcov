@@ -2,7 +2,7 @@
 ###### It's actually just a toy app with 4 types of commands
 
 ## Tools
-* I chose Go because that's the language I've been working with recently. For a serious application I'd probably use something else because there isn't a officially maintained `twilio-sdk` for Go.
+* I chose Go because that's the language I've been working with recently. For a serious application I'd probably use something else because there isn't an officially maintained `twilio-sdk` for Go.
 * I chose `Heroku` because I wanted to try it. I like it, I'll probably use it for personal projects/experiments going forward. Very fast zero-to-deployed platform.
 * Postgres because it's my go-to.
 
