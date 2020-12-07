@@ -7,6 +7,8 @@ import (
 	"regexp"
 	"strings"
 
+	"golang.org/x/text/message"
+
 	"github.com/TuhinNair/durcov"
 )
 
@@ -32,7 +34,7 @@ func (b *Bot) handleBotError(botErr *botError) string {
 
 	contextMsg := ""
 	for i, info := range botErr.context {
-		infoMsg := fmt.Sprintf("%d) %v\n", i, info)
+		infoMsg := fmt.Sprintf("%d) %v\n", i+1, info)
 		contextMsg = contextMsg + infoMsg
 	}
 	logMsg := fmt.Sprintf("\nError: %v\nContext: %s", err, contextMsg)
@@ -184,7 +186,8 @@ func (b *Bot) generateGlobalActiveMessage() (string, *botError) {
 		botErr := &botError{err, "Sorry, I don't have the results right now.", failedMessageCtxt}
 		return "", botErr
 	}
-	message := fmt.Sprintf("Total Active Cases: %d", activeCount)
+
+	message := fmt.Sprintf("Total Active Cases: %s", formatNumber(activeCount))
 	return message, nil
 }
 
@@ -197,7 +200,7 @@ func (b *Bot) generateCountryActiveMessage(code string) (string, *botError) {
 		return "", botErr
 	}
 
-	message := fmt.Sprintf("%s Active Cases: %d", code, activeCount)
+	message := fmt.Sprintf("%s Active Cases: %s", code, formatNumber(activeCount))
 	return message, nil
 }
 
@@ -216,7 +219,8 @@ func (b *Bot) generateGlobalDeathsMessage() (string, *botError) {
 		botErr := &botError{err, "Sorry, I don't have the results right now.", failedMessageCtxt}
 		return "", botErr
 	}
-	message := fmt.Sprintf("Total Deaths: %d", deathCount)
+
+	message := fmt.Sprintf("Total Deaths: %s", formatNumber(deathCount))
 	return message, nil
 }
 
@@ -228,6 +232,12 @@ func (b *Bot) generateCountryDeathsMessage(code string) (string, *botError) {
 		botErr := &botError{err, "Sorry, I don't have the results right now.", failedMessageCtxt}
 		return "", botErr
 	}
-	message := fmt.Sprintf("%s Deaths: %v", code, deathCount)
+
+	message := fmt.Sprintf("%s Deaths: %s", code, formatNumber(deathCount))
 	return message, nil
+}
+
+func formatNumber(n int64) string {
+	p := message.NewPrinter(message.MatchLanguage("en"))
+	return p.Sprintf("%d", n)
 }

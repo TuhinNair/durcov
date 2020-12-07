@@ -11,6 +11,8 @@ import (
 
 func TestMain(m *testing.M) {
 	log.SetOutput(ioutil.Discard)
+	exitVal := m.Run()
+	os.Exit(exitVal)
 }
 func TestBotMatchRequest(t *testing.T) {
 	tests := []struct {
@@ -151,19 +153,19 @@ func TestBotResponseGeneration(t *testing.T) {
 	}{
 		{
 			"CASES TOTAL",
-			"Total Active Cases: 9000000",
+			"Total Active Cases: 9,000,000",
 		},
 		{
 			"CASES AF",
-			"AF Active Cases: 8132",
+			"AF Active Cases: 8,132",
 		},
 		{
 			"DEATHS TOTAL",
-			"Total Deaths: 500000",
+			"Total Deaths: 500,000",
 		},
 		{
 			"DEATHS SG",
-			"SG Deaths: 1822",
+			"SG Deaths: 1,822",
 		},
 		{
 			"abcdefghijklmnopqrstuvwxyz",
