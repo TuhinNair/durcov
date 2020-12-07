@@ -22,7 +22,7 @@ const (
 type DataView interface {
 	SetDBConnection(pgxpool *pgx.ConnPool)
 	LatestGlobalView(datapoint Datum) (int64, error)
-	LatestCountryView(countryCode string, datapoint Datum) (int64, error)
+	LatestCountryView(countryCode string, datapoint Datum) (name string, count int64, err error)
 }
 
 // NoCountryMatchedError when data for a given country code is not found in the database
@@ -86,9 +86,9 @@ func (c *CovidBotView) latestGlobalDeaths() (int64, error) {
 
 // LatestCountryView returns the latest (available) covid data for the given country code and datapoint.
 // Returns err if no match found for the country code (or) if no view implemented for the datapoint.
-func (c *CovidBotView) LatestCountryView(countryCode string, datapoint Datum) (int64, error) {
+func (c *CovidBotView) LatestCountryView(countryCode string, datapoint Datum) (string, int64, error) {
 	if c.pgxpool == nil {
-		return 0, errors.New("DB Connection not set in data view")
+		return "", 0, errors.New("DB Connection not set in data view")
 	}
 	switch datapoint {
 	case Active:
@@ -96,36 +96,38 @@ func (c *CovidBotView) LatestCountryView(countryCode string, datapoint Datum) (i
 	case Deaths:
 		return c.latestCountryDeaths(countryCode)
 	default:
-		return 0, errors.Newf("Unsupported Op for Country View. Datum Enum %d", datapoint)
+		return "", 0, errors.Newf("Unsupported Op for Country View. Datum Enum %d", datapoint)
 	}
 }
 
-func (c *CovidBotView) latestCountryActive(countryCode string) (int64, error) {
+func (c *CovidBotView) latestCountryActive(countryCode string) (string, int64, error) {
 	var confirmed int64
 	var deaths int64
 	var recovered int64
+	var name string
 
-	err := c.pgxpool.QueryRow("SELECT confirmed, deaths, recovered FROM covid_stats WHERE id=$1;", countryCode).Scan(&confirmed, &deaths, &recovered)
+	err := c.pgxpool.QueryRow("SELECT name, confirmed, deaths, recovered FROM covid_stats WHERE id=$1;", countryCode).Scan(&name, &confirmed, &deaths, &recovered)
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			return 0, &NoCountryMatchedError{countryCode}
+			return "", 0, &NoCountryMatchedError{countryCode}
 		}
-		return 0, err
+		return "", 0, err
 	}
 	countryActive := calculateActive(confirmed, deaths, recovered)
-	return countryActive, nil
+	return name, countryActive, nil
 }
 
-func (c *CovidBotView) latestCountryDeaths(countryCode string) (int64, error) {
+func (c *CovidBotView) latestCountryDeaths(countryCode string) (string, int64, error) {
 	var deaths int64
-	err := c.pgxpool.QueryRow("SELECT deaths FROM covid_stats WHERE id=$1;", countryCode).Scan(&deaths)
+	var name string
+	err := c.pgxpool.QueryRow("SELECT name, deaths FROM covid_stats WHERE id=$1;", countryCode).Scan(&name, &deaths)
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			return 0, &NoCountryMatchedError{countryCode}
+			return "", 0, &NoCountryMatchedError{countryCode}
 		}
-		return 0, err
+		return "", 0, err
 	}
-	return deaths, nil
+	return name, deaths, nil
 }
 
 func calculateActive(confirmed int64, deaths int64, recovered int64) int64 {

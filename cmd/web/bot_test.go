@@ -157,7 +157,7 @@ func TestBotResponseGeneration(t *testing.T) {
 		},
 		{
 			"CASES AF",
-			"AF Active Cases: 8,132",
+			"[AF] Afghanistan Active Cases: 8,132",
 		},
 		{
 			"DEATHS TOTAL",
@@ -165,7 +165,7 @@ func TestBotResponseGeneration(t *testing.T) {
 		},
 		{
 			"DEATHS SG",
-			"SG Deaths: 1,822",
+			"[SG] Singapore Deaths: 1,822",
 		},
 		{
 			"abcdefghijklmnopqrstuvwxyz",

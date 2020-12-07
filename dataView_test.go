@@ -54,18 +54,21 @@ func TestDataView(t *testing.T) {
 		},
 		"Countries deaths view": func(t *testing.T) {
 			for _, country := range exampleData.countries {
-				countryDeaths, err := dataView.LatestCountryView(country.code, Deaths)
+				countryName, countryDeaths, err := dataView.LatestCountryView(country.code, Deaths)
 				if err != nil {
 					t.Error(err)
 				}
 				if countryDeaths != country.stats.totalDeaths {
 					t.Errorf("country deaths mismatch for country=%s. Expected=%d Got=%d", country.name, country.stats.totalDeaths, countryDeaths)
 				}
+				if countryName != country.name {
+					t.Errorf("country name mismatch. Expected=%s Got=%s", country.name, countryName)
+				}
 			}
 		},
 		"Countries active view": func(t *testing.T) {
 			for _, country := range exampleData.countries {
-				countryActive, err := dataView.LatestCountryView(country.code, Active)
+				countryName, countryActive, err := dataView.LatestCountryView(country.code, Active)
 				if err != nil {
 					t.Error(err)
 				}
@@ -77,14 +80,18 @@ func TestDataView(t *testing.T) {
 				if countryActive != expectedActive {
 					t.Errorf("country active mismatch for country=%s. Expected=%d Got=%d", country.name, expectedActive, countryActive)
 				}
+
+				if countryName != country.name {
+					t.Errorf("country name mismatch. Expected=%s Got=%s", country.name, countryName)
+				}
 			}
 		},
 		"Unmathced country code returns specific error": func(t *testing.T) {
-			_, err := dataView.LatestCountryView("--", Active)
+			_, _, err := dataView.LatestCountryView("--", Active)
 			if err, ok := err.(*NoCountryMatchedError); !ok {
 				t.Errorf("Unexpected error. Expected=*NoCountryMatchedError Got=%T", err)
 			}
-			_, err = dataView.LatestCountryView("--", Deaths)
+			_, _, err = dataView.LatestCountryView("--", Deaths)
 			if err, ok := err.(*NoCountryMatchedError); !ok {
 				t.Errorf("Unexpected error. Expected=*NoCountryMatchedError Got=%T", err)
 			}

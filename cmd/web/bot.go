@@ -192,7 +192,7 @@ func (b *Bot) generateGlobalActiveMessage() (string, *botError) {
 }
 
 func (b *Bot) generateCountryActiveMessage(code string) (string, *botError) {
-	activeCount, err := b.view.LatestCountryView(code, durcov.Active)
+	countryName, activeCount, err := b.view.LatestCountryView(code, durcov.Active)
 	if err != nil {
 		logMessage := fmt.Sprintf("Error: Country Active. Code=%s", code)
 		failedMessageCtxt := []interface{}{logMessage}
@@ -200,7 +200,7 @@ func (b *Bot) generateCountryActiveMessage(code string) (string, *botError) {
 		return "", botErr
 	}
 
-	message := fmt.Sprintf("%s Active Cases: %s", code, formatNumber(activeCount))
+	message := fmt.Sprintf("[%s] %s Active Cases: %s", code, countryName, formatNumber(activeCount))
 	return message, nil
 }
 
@@ -225,7 +225,7 @@ func (b *Bot) generateGlobalDeathsMessage() (string, *botError) {
 }
 
 func (b *Bot) generateCountryDeathsMessage(code string) (string, *botError) {
-	deathCount, err := b.view.LatestCountryView(code, durcov.Deaths)
+	countryName, deathCount, err := b.view.LatestCountryView(code, durcov.Deaths)
 	if err != nil {
 		logMessage := fmt.Sprintf("Error: Country Deaths. Code=%s", code)
 		failedMessageCtxt := []interface{}{logMessage}
@@ -233,7 +233,7 @@ func (b *Bot) generateCountryDeathsMessage(code string) (string, *botError) {
 		return "", botErr
 	}
 
-	message := fmt.Sprintf("%s Deaths: %s", code, formatNumber(deathCount))
+	message := fmt.Sprintf("[%s] %s Deaths: %s", code, countryName, formatNumber(deathCount))
 	return message, nil
 }
 
