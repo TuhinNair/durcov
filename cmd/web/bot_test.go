@@ -1,12 +1,17 @@
 package main
 
 import (
+	"io/ioutil"
+	"log"
 	"os"
 	"testing"
 
 	"github.com/TuhinNair/durcov"
 )
 
+func TestMain(m *testing.M) {
+	log.SetOutput(ioutil.Discard)
+}
 func TestBotMatchRequest(t *testing.T) {
 	tests := []struct {
 		input                 string
@@ -159,6 +164,22 @@ func TestBotResponseGeneration(t *testing.T) {
 		{
 			"DEATHS SG",
 			"SG Deaths: 1822",
+		},
+		{
+			"abcdefghijklmnopqrstuvwxyz",
+			"Sorry, I'm not sure how to respond to that.",
+		},
+		{
+			"DEATH SG",
+			"Sorry, I'm not sure how to respond to that.",
+		},
+		{
+			"CASES                                                TOTAL",
+			"Sorry, that message is too long for me.",
+		},
+		{
+			"cases IN",
+			"Sorry, that code doesn't match any countries I know.",
 		},
 	}
 

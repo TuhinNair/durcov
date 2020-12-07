@@ -79,7 +79,7 @@ func (b *Bot) respond(requestMessage string) string {
 
 func (b *Bot) trimRequest(reqMsg string) (string, *botError) {
 	trimmedReqMsg := strings.Trim(reqMsg, " ")
-	if len(trimmedReqMsg) > 20 {
+	if len(trimmedReqMsg) > 40 {
 		requestLog := fmt.Sprintf("Message Too Long: %s", reqMsg)
 		failedMessageCtxt := []interface{}{requestLog}
 		botErr := &botError{
@@ -100,7 +100,6 @@ func (b *Bot) matchRequest(trimmedRequestMessage string) (*parsedRequest, *botEr
 
 	command, code := b.extractSubExp(matches)
 
-	log.Printf("Got matched: Command: %s, Code: %s", command, code)
 	switch command {
 	case "CASES":
 		return &parsedRequest{_Cases, code}, nil
@@ -151,10 +150,8 @@ func (b *Bot) extractSubExp(matches []string) (command string, code string) {
 func (b *Bot) generateResponse(parsedReq *parsedRequest) (string, *botError) {
 	switch parsedReq.Type {
 	case _Cases:
-		log.Println("About to generate cases response")
 		return b.generateCasesResponse(parsedReq.Code)
 	case _Deaths:
-		log.Println("About to generate deaths response")
 		return b.generateDeathsResponse(parsedReq.Code)
 	}
 
@@ -174,10 +171,8 @@ func (b *Bot) generateResponse(parsedReq *parsedRequest) (string, *botError) {
 
 func (b *Bot) generateCasesResponse(code string) (string, *botError) {
 	if code == "TOTAL" {
-		log.Println("About to generaye global active message")
 		return b.generateGlobalActiveMessage()
 	}
-	log.Println("About to generate country active message")
 	return b.generateCountryActiveMessage(code)
 }
 
@@ -208,10 +203,8 @@ func (b *Bot) generateCountryActiveMessage(code string) (string, *botError) {
 
 func (b *Bot) generateDeathsResponse(code string) (string, *botError) {
 	if code == "TOTAL" {
-		log.Println("About to generate globaldeathsmessage")
 		return b.generateGlobalDeathsMessage()
 	}
-	log.Println("about to generate country deaths message")
 	return b.generateCountryDeathsMessage(code)
 }
 

@@ -73,34 +73,34 @@ func (tb *TwilioBot) parseRequest(r *http.Request) (*twilioRequest, error) {
 	}
 	to, ok := r.Form["To"]
 	if !ok {
-		log.Println("No To in form")
+		log.Println("Request Error: Missing `To` key in request form data.")
 		return nil, err
 	}
 	if len(to) == 0 {
 		log.Println("to is nil")
-		return nil, errors.New("No to number")
+		return nil, errors.New("Request Error: Missing `To` value in request form data")
 	}
 	toAddress := to[0]
 
 	from, ok := r.Form["From"]
 	if !ok {
-		log.Println("No from in form")
+		log.Println("Request Error: Missing `From` key in request form data.")
 		return nil, err
 	}
 	if len(from) == 0 {
 		log.Println("No from number")
-		return nil, errors.New("No from number")
+		return nil, errors.New("Request Error: Missing `From` value in request form data")
 	}
 	fromAddress := from[0]
 
 	body, ok := r.Form["Body"]
 	if !ok {
-		log.Println("No Body in form")
+		log.Println("Request Error: Missing `Body` key in request form data.")
 		return nil, err
 	}
 	if len(body) == 0 {
 		log.Println("No message in body")
-		return nil, errors.New("No message in body")
+		return nil, errors.New("Request Error: Missing `Body` value in request form data")
 	}
 	messageBody := body[0]
 

@@ -2,7 +2,6 @@ package durcov
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/jackc/pgx"
 	"gopkg.in/errgo.v2/fmt/errors"
@@ -55,10 +54,8 @@ func (c *CovidBotView) LatestGlobalView(datapoint Datum) (int64, error) {
 	}
 	switch datapoint {
 	case Active:
-		log.Println("About to view latestGlobalActive")
 		return c.latestGlobalActive()
 	case Deaths:
-		log.Println("About to view latestGlobalDeaths")
 		return c.latestGlobalDeaths()
 	default:
 		return 0, errors.Newf("Unsupported Op for Global View. Datum Enum %d", datapoint)
