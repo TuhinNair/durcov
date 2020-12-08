@@ -18,12 +18,13 @@
 * My interpretation of "total no. of..." is "as of" today. Which means I don't store or return data specific to the day (as in not the difference between Day1 and Day 2 but the running total as of Day 2).
 
 ## So about my services. They're..
-* actually a combination of a server and a scheduled task. Implementing two continuosly waiting applications with possibly a queue felt like overkill for the following reasons:
+* actually a combination of a server and a scheduled task. Implementing two applications with possibly a scheduler+queue felt like overkill because:
     * There's only one job to do.
     * It's not long-running.
     * It's not state/event dependent.
     * Consistent schedule.
 * Database access is wrapped by function-specific API's that both the task script and web service use. Switching a database for either piece means simply changing the connection used and extending the package.
+* The scheduled task spins up it's own one-time "dyno" (Heroku's name for a container) while the web server is a continuously running (not quite true because the free tier goes to sleep after 30 mins of inactivity).
 
 ## Testing
 * I only included the tests I actually used for feedback while implementing the app. `tests.sh` is a script I used for setting up the tests locally and presumes you have postgres installed.
@@ -53,8 +54,8 @@
 
 ## Considerations (or things I should've done)
 * The API used (and other similar API's) allow subscribing to updates (by registering a webhook) which means we'd only make network requests as necessary. But that's API provider specific and the doc mentioned polling, so I polled away.
-* Rate limiting. Twilio itself has some sort of rate limiting but I'd have some simple application level rate limiting as well.
-* Health checks, context tracking/tracing for audit logging, audit logging, tiered logging and all the other nice web stuff.
+* Rate limiting. Twilio itself has some sort of rate limiting but I'd have some simple application level rate limiting as well. (We do authenticate the requests coming so there's a bit of protection.)
+* Health checks, context tracking/tracing for audit logging, audit logging, tiered logging and all the other nice web middleware. I only had one route here so just logged the essentialls.
 * Maybe sessions? Although I don't know how much that matters for an app like this.
 
 ## Demo 
