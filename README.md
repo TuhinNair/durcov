@@ -57,6 +57,7 @@
 * Rate limiting. Twilio itself has some sort of rate limiting but I'd have some simple application level rate limiting as well. (We do authenticate the requests coming so there's a bit of protection.)
 * Health checks, context tracking/tracing for audit logging, audit logging, tiered logging and all the other nice web middleware. I only had one route here so just logged the essentialls.
 * Maybe sessions? Although I don't know how much that matters for an app like this.
+* Graceful shutdowns, emergency request caching/queing etc. Availability enhancement.
 
 ## Demo 
 * All commands are case insensitive and there's some amount of lenience for how much space is used between the command and the code.
