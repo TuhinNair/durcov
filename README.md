@@ -1,6 +1,13 @@
 # DurCov - The Covid-19 Whatsapp Inquiry Machine 
 ###### It's actually just a toy app with 4 types of commands
 
+## Repo Structure
+* Just to make it easier/faster on first read, here's a brief overview of the repository's structure.
+    * The code for the two executables (`poll` and `web`) live inside the `cmd` directory.
+    * The package they both use (i.e the shared functionality) lives in the root of the project and have the `durcov` package providing namespacing. 
+    * I tend to prefer flat file structures unless compelled to organize into folders but I believe the file names and code should be self-explanatory.
+    * This may be easy to miss but the heroku build instructions are a combination of the `Procfile` and the build tags at the very top of the `go.mod` file.
+
 ## Tools
 * I chose Go because that's the language I've been working with recently. For a lasting application I'd probably use something else because there isn't an officially maintained `twilio-sdk` for Go.
 * I chose `Heroku` because I wanted to try it. (I like it, I'll probably use it for personal projects/experiments going forward. Very fast zero-to-deployed platform.)
