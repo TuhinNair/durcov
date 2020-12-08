@@ -55,21 +55,21 @@ func (tb *TwilioBot) handleWhatsapp(w http.ResponseWriter, r *http.Request) {
 
 	err := tb.validator.validateRequest(r)
 	if err != nil {
-		log.Println("Twilio not authenticated")
+		log.Printf("Twilio not authenticated: %v", err)
 		http.Error(w, http.StatusText(401), 401)
 		return
 	}
 
 	twilioRequestData, err := tb.parseRequest(r)
 	if err != nil {
-		log.Println("Malformed request")
+		log.Printf("Malformed request: %v", err)
 		http.Error(w, http.StatusText(400), 400)
 		return
 	}
 
 	err = tb.respond(twilioRequestData)
 	if err != nil {
-		log.Println("Unable to respond")
+		log.Printf("Unable to respond: %v", err)
 		http.Error(w, http.StatusText(500), 500)
 	} else {
 		w.WriteHeader(200)

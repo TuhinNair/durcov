@@ -11,11 +11,11 @@ import (
 )
 
 type config struct {
-	port            string
-	twilioSID       string
-	twilioAuthToken string
-	twilioWebhook   string
-	dbURL           string
+	port              string
+	twilioSID         string
+	twilioAuthToken   string
+	twilioWebhookHost string
+	dbURL             string
 }
 
 func loadConfig() *config {
@@ -23,10 +23,10 @@ func loadConfig() *config {
 	port = ":" + port
 	twilioSID := os.Getenv("TWILIO_SID")
 	twilioAuthToken := os.Getenv("TWILIO_AUTH_TOKEN")
-	twilioWebhook := os.Getenv("TWILIO_WEBHOOK")
+	twilioWebhookHost := os.Getenv("TWILIO_WEBHOOK_HOST")
 	dbURL := os.Getenv("DATABASE_URL")
 
-	return &config{port, twilioSID, twilioAuthToken, twilioWebhook, dbURL}
+	return &config{port, twilioSID, twilioAuthToken, twilioWebhookHost, dbURL}
 }
 
 func main() {
@@ -42,7 +42,7 @@ func main() {
 	bot := &Bot{dataview}
 
 	twilioClient := twilio.NewClient(config.twilioSID, config.twilioAuthToken, nil)
-	twilioValidator := &twilioValidator{config.twilioWebhook, config.twilioAuthToken}
+	twilioValidator := &twilioValidator{config.twilioWebhookHost, config.twilioAuthToken}
 	twilioBot := TwilioBot{twilioClient, twilioValidator, bot}
 
 	mux := http.NewServeMux()
