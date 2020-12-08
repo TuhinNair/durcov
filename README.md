@@ -31,7 +31,7 @@
     * It's not state/event dependent.
     * Consistent schedule.
 * Database access is wrapped by function-specific API's that both the task script and web service use. Switching a database for either piece means simply changing the connection used and extending the package.
-* The scheduled task spins up it's own one-time "dyno" (Heroku's name for a container) while the web server is a continuously running (not quite true because the free tier goes to sleep after 30 mins of inactivity).
+* The scheduled task spins up it's own one-time "dyno" (Heroku's name for a container) while the web server is a continuously running application (not quite true because the free tier goes to sleep after 30 mins of inactivity).
 
 ## Testing
 * I only included the tests I actually used for feedback while implementing the app. `tests.sh` is a script I used for setting up the tests locally and presumes you have postgres installed.
