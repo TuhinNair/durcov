@@ -2,7 +2,7 @@
 ###### It's actually just a toy app with 4 types of commands
 
 ## Tools
-* I chose Go because that's the language I've been working with recently. For a lasting application I'd probably use something else because there isn't a officially maintained `twilio-sdk` for Go.
+* I chose Go because that's the language I've been working with recently. For a lasting application I'd probably use something else because there isn't an officially maintained `twilio-sdk` for Go.
 * I chose `Heroku` because I wanted to try it. (I like it, I'll probably use it for personal projects/experiments going forward. Very fast zero-to-deployed platform.)
 * Postgres.
 
@@ -41,7 +41,7 @@
     * scheduler
     * secrets management
     * TLS (this actually comes with any `*.herokuapp.com` domain)
-* Unfortunately developer-defined permissioned access to the database is a paid feature which means all access is as a superuser. The `pgx` package I use as a postgres driver caches queries by default so they work like prepared statements.
+* Unfortunately developer-defined permissioned access to the database is a paid feature which means all access is as a superuser. The `pgx` package I use as a postgres driver caches queries by default so they work like prepared statements.(This point actually relates to SQL injection and not heroku directly) 
 
 ## Oh-oh! REGEX!
 * I'd usually stay away from regex for most use cases but it made sense here (for pattern matching on incoming messages) because:
