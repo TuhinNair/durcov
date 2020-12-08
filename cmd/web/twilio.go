@@ -47,6 +47,7 @@ func (tr *twilioResponse) respond(twilioClient *twilio.Client) error {
 
 func (tb *TwilioBot) handleWhatsapp(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
+		log.Println("Method Not Allowed")
 		w.Header().Set("Allow", "POST")
 		http.Error(w, http.StatusText(405), 405)
 		return
@@ -54,18 +55,21 @@ func (tb *TwilioBot) handleWhatsapp(w http.ResponseWriter, r *http.Request) {
 
 	err := tb.validator.validateRequest(r)
 	if err != nil {
+		log.Println("Twilio not authenticated")
 		http.Error(w, http.StatusText(401), 401)
 		return
 	}
 
 	twilioRequestData, err := tb.parseRequest(r)
 	if err != nil {
+		log.Println("Malformed request")
 		http.Error(w, http.StatusText(400), 400)
 		return
 	}
 
 	err = tb.respond(twilioRequestData)
 	if err != nil {
+		log.Println("Unable to respond")
 		http.Error(w, http.StatusText(500), 500)
 	} else {
 		w.WriteHeader(200)
