@@ -2,12 +2,12 @@
 ###### It's actually just a toy app with 4 types of commands
 
 ## Tools
-* I chose Go because that's the language I've been working with recently. For a serious application I'd probably use something else because there isn't a officially maintained `twilio-sdk` for Go.
-* I chose `Heroku` because I wanted to try it. I like it, I'll probably use it for personal projects/experiments going forward. Very fast zero-to-deployed platform.
-* Postgres because it's my go-to.
+* I chose Go because that's the language I've been working with recently. For a lasting application I'd probably use something else because there isn't a officially maintained `twilio-sdk` for Go.
+* I chose `Heroku` because I wanted to try it. (I like it, I'll probably use it for personal projects/experiments going forward. Very fast zero-to-deployed platform.)
+* Postgres.
 
 ## Assumptions (or the fine art of taking shortcuts?)
-* The doc mentions two services. Now that could mean isolated applications communicating over a network but to me that meant:
+* The doc mentions two services. My implementation might not meet everyone's definition because to some that could mean isolated applications communicating over a network but to me that meant:
     * Modular 
     * Composable
     * Decoupled

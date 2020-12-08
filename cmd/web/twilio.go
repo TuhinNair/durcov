@@ -10,8 +10,18 @@ import (
 
 // TwilioBot represents a twilio client backed by a bot
 type TwilioBot struct {
-	client *twilio.Client
-	bot    *Bot
+	client    *twilio.Client
+	validator *twilioValidator
+	bot       *Bot
+}
+
+type twilioValidator struct {
+	host      string
+	authToken string
+}
+
+func (tw *twilioValidator) validateRequest(req *http.Request) error {
+	return twilio.ValidateIncomingRequest(tw.host, tw.authToken, req)
 }
 
 type twilioRequest struct {
@@ -41,6 +51,13 @@ func (tb *TwilioBot) handleWhatsapp(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(405), 405)
 		return
 	}
+
+	err := tb.validator.validateRequest(r)
+	if err != nil {
+		http.Error(w, http.StatusText(401), 401)
+		return
+	}
+
 	twilioRequestData, err := tb.parseRequest(r)
 	if err != nil {
 		http.Error(w, http.StatusText(400), 400)

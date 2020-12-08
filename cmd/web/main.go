@@ -14,6 +14,7 @@ type config struct {
 	port            string
 	twilioSID       string
 	twilioAuthToken string
+	twilioWebhook   string
 	dbURL           string
 }
 
@@ -22,9 +23,10 @@ func loadConfig() *config {
 	port = ":" + port
 	twilioSID := os.Getenv("TWILIO_SID")
 	twilioAuthToken := os.Getenv("TWILIO_AUTH_TOKEN")
+	twilioWebhook := os.Getenv("TWILIO_WEBHOOK")
 	dbURL := os.Getenv("DATABASE_URL")
 
-	return &config{port, twilioSID, twilioAuthToken, dbURL}
+	return &config{port, twilioSID, twilioAuthToken, twilioWebhook, dbURL}
 }
 
 func main() {
@@ -40,7 +42,8 @@ func main() {
 	bot := &Bot{dataview}
 
 	twilioClient := twilio.NewClient(config.twilioSID, config.twilioAuthToken, nil)
-	twilioBot := TwilioBot{twilioClient, bot}
+	twilioValidator := &twilioValidator{config.twilioWebhook, config.twilioAuthToken}
+	twilioBot := TwilioBot{twilioClient, twilioValidator, bot}
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/whatsapp", twilioBot.handleWhatsapp)
